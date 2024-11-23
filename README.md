@@ -1,3 +1,7 @@
+#This is a fork of orginal Inventory Kamera repository that you can find in link below
+
+
+
 # Inventory Kamera - A Genshin Data Scanner
 
 Fan-made Genshin Impact tool that scans characters, weapons, artifacts, materials and character development items in your inventory using the OCR technique.
