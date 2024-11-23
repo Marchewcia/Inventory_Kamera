@@ -1,5 +1,4 @@
-#This is a fork of orginal Inventory Kamera repository that you can find in link below
-
+<h1>This is a fork of orginal Inventory Kamera repository that you can find<a href="https://github.com/Andrewthe13th/Inventory_Kamera">here</a>.</h1>
 
 
 # Inventory Kamera - A Genshin Data Scanner
