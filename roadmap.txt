@@ -1,0 +1,50 @@
+Roadmap for rewriting inventory camera:
+
+1. Visuals
+    1.1. New, better quality icon
+    1.2. New, modernized user interface with dark mode (light for psychopats)
+    1.3. Actual installer with option of choosing
+        1.3.1. where camera is installed
+        1.3.2. where GOOD, log and other output files are stored (with making new directory '/camera_output/Scan No.X/' for every scan)
+        1.3.3. desktop shortcut + start menu folder + shortcut
+    1.4. instruction *how* to use camera + initial set up (traveler's/wanderer's name etc; changeable later)
+    1.5. new proper README.md
+
+2. New image recognition model
+    2.1. Collecting data for training
+    2.2. Making and training such model
+    2.3. Testing model on old camera version before rest of rewrite
+
+3. Rewriting main program
+    3.1. Making reusable code, main class for scraping data then inheritance with edits specific for item (excluding character scraping)
+    3.2. Converting data to GOOD format
+    3.3. Support for:
+        3.3.1. Characters
+        3.3.2. Artifacts
+        3.3.3. Weapons
+        With equiping weapons and artifacts onto Characters
+        3.3.4. (later down the line) Scraping achievments
+    3.4. Making the program more efficient (?)
+    3.5. Rewriting logging logic, handling exceptions, I/O operations with checks
+
+4. Support for new mechanics
+    4.1. Support for artifacts affected with
+        4.1.1. sanctyfying elixir
+        4.1.2. (if it affects artifact reading)
+
+5. Backstage stuff
+    5.1. Managing versioning (A.B.C:D)
+        5.1.1. (A) "epoc" version, unless a major rewrite stays on 2, signing a major change from v1.X.X
+        5.1.2. (B) major version, representing current genshin major version (at the time of writing version *5*.7)
+        5.1.3. (C) minor version, representing current genshin minor version (at the time of writing version 5.*7*)
+        5.1.4. (D) patch, defining patches and releases (release-X.Y). Each minor version there will be a 'release-1.0' being main release per minor version, with fixes for 
+                   minor bugs/additions (marked Y) that are not necessary fixes for proper kamera work. If release-1.X will contain program-breaking bug there will be
+                release-2.X and so on..
+        temporary versioning
+        5.1.5. versioning before 2.X.X:release-1.0 will be marked as such:
+            5.1.5.1.  2.X.X:alpha-X.X for rewriting the core logic and image recognition data
+            5.1.5.2.  2.X.X:beta-X.X for releases after main core of program will be rewritten, to introduce rest of changes and features
+            5.1.5.3.  2.X.X:preRelease-X.X for adding last touches and testing stuff before main release
+    5.2. sync of program with .jsons for weapons, chars etc. on startup with github repo/branch dedicated for said task without need to reinstall
+    5.3. updates within the app (for later)
+
