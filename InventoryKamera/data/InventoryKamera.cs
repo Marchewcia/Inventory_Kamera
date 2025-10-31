@@ -406,7 +406,7 @@ namespace InventoryKamera
 							break;
 
 						default:
-							MainForm.UnexpectedError("Unknown Image type for Image Processor");
+							MainMenu.UnexpectedError("Unknown Image type for Image Processor");
 							break;
 					}
 				}

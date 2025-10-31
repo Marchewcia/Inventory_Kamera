@@ -1,6 +1,6 @@
 ﻿namespace InventoryKamera
 {
-    partial class MainForm
+    partial class MainMenu
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainMenu));
             this.StartScan_Button = new System.Windows.Forms.Button();
             this.WeaponArtifact_Label = new System.Windows.Forms.Label();
             this.WeaponArtifactOutput_TextBox_Label = new System.Windows.Forms.Label();
@@ -74,8 +74,6 @@
             this.FileLocation_Label = new System.Windows.Forms.Label();
             this.Language_Label = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Quit_MenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.keysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inventoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.inventoryToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
@@ -86,6 +84,8 @@
             this.DatabaseUpdateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.updateExecutablesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -439,7 +439,6 @@
             // 
             this.ErrorLog_Label.AutoSize = true;
             this.ErrorLog_Label.BackColor = System.Drawing.SystemColors.Desktop;
-            this.ErrorLog_Label.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ErrorLog_Label.ForeColor = System.Drawing.Color.Red;
             this.ErrorLog_Label.Location = new System.Drawing.Point(7, 221);
             this.ErrorLog_Label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -505,6 +504,7 @@
             this.Navigation_Label.Size = new System.Drawing.Size(61, 13);
             this.Navigation_Label.TabIndex = 65;
             this.Navigation_Label.Text = "Navigation:";
+            this.Navigation_Label.Click += new System.EventHandler(this.Navigation_Label_Click);
             // 
             // ScannerOutput_Panel
             // 
@@ -632,29 +632,14 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.keysToolStripMenuItem});
+            this.keysToolStripMenuItem,
+            this.aToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(595, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1132, 24);
             this.menuStrip1.TabIndex = 85;
             this.menuStrip1.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Quit_MenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // Quit_MenuItem
-            // 
-            this.Quit_MenuItem.Name = "Quit_MenuItem";
-            this.Quit_MenuItem.Size = new System.Drawing.Size(97, 22);
-            this.Quit_MenuItem.Text = "Quit";
-            this.Quit_MenuItem.Click += new System.EventHandler(this.Exit_MenuItem_Click);
             // 
             // keysToolStripMenuItem
             // 
@@ -674,7 +659,7 @@
             this.inventoryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.inventoryToolStripTextBox});
             this.inventoryToolStripMenuItem.Name = "inventoryToolStripMenuItem";
-            this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.inventoryToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.inventoryToolStripMenuItem.Text = "Inventory Key";
             // 
             // inventoryToolStripTextBox
@@ -694,7 +679,7 @@
             this.characterScreenToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.characterToolStripTextBox});
             this.characterScreenToolStripMenuItem.Name = "characterScreenToolStripMenuItem";
-            this.characterScreenToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.characterScreenToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.characterScreenToolStripMenuItem.Text = "Character Screen Key";
             // 
             // characterToolStripTextBox
@@ -714,7 +699,7 @@
             this.characterSlot1KeyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.slot1StripTextBox});
             this.characterSlot1KeyToolStripMenuItem.Name = "characterSlot1KeyToolStripMenuItem";
-            this.characterSlot1KeyToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.characterSlot1KeyToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.characterSlot1KeyToolStripMenuItem.Text = "Character Slot 1 Key";
             // 
             // slot1StripTextBox
@@ -732,23 +717,38 @@
             // DatabaseUpdateMenuItem
             // 
             this.DatabaseUpdateMenuItem.Name = "DatabaseUpdateMenuItem";
-            this.DatabaseUpdateMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.DatabaseUpdateMenuItem.Size = new System.Drawing.Size(190, 22);
             this.DatabaseUpdateMenuItem.Text = "Update Lookup Tables";
             this.DatabaseUpdateMenuItem.Click += new System.EventHandler(this.DatabaseUpdateMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(191, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(190, 22);
             this.toolStripMenuItem1.Text = "Open Export Folder";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.ExportFolderMenuItem_Click);
             // 
             // updateExecutablesToolStripMenuItem
             // 
             this.updateExecutablesToolStripMenuItem.Name = "updateExecutablesToolStripMenuItem";
-            this.updateExecutablesToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.updateExecutablesToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
             this.updateExecutablesToolStripMenuItem.Text = "Update Executables";
             this.updateExecutablesToolStripMenuItem.Click += new System.EventHandler(this.updateExecutablesToolStripMenuItem_Click);
+            // 
+            // aToolStripMenuItem
+            // 
+            this.aToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aToolStripMenuItem1});
+            this.aToolStripMenuItem.Name = "aToolStripMenuItem";
+            this.aToolStripMenuItem.Size = new System.Drawing.Size(25, 20);
+            this.aToolStripMenuItem.Text = "a";
+            // 
+            // aToolStripMenuItem1
+            // 
+            this.aToolStripMenuItem1.Name = "aToolStripMenuItem1";
+            this.aToolStripMenuItem1.Size = new System.Drawing.Size(80, 22);
+            this.aToolStripMenuItem1.Text = "a";
+            this.aToolStripMenuItem1.Click += new System.EventHandler(this.aToolStripMenuItem1_Click);
             // 
             // label2
             // 
@@ -879,7 +879,6 @@
             this.SortByObtained.Size = new System.Drawing.Size(145, 13);
             this.SortByObtained.TabIndex = 107;
             this.SortByObtained.Text = "Num of Artifact Page to Scan";
-            this.SortByObtained.Click += new System.EventHandler(this.label5_Click);
             // 
             // label5
             // 
@@ -889,7 +888,6 @@
             this.label5.Size = new System.Drawing.Size(149, 13);
             this.label5.TabIndex = 109;
             this.label5.Text = "Number of Character To Scan";
-            this.label5.Click += new System.EventHandler(this.label5_Click_1);
             // 
             // NumOfCharToScanControl
             // 
@@ -915,7 +913,6 @@
             this.SortByObtainedControl.TabIndex = 108;
             this.ZeroMeansAllTooltips.SetToolTip(this.SortByObtainedControl, "Selecting 0 scans all Artifacts");
             this.SortByObtainedControl.Value = global::InventoryKamera.Properties.Settings.Default.SortByObtained;
-            this.SortByObtainedControl.ValueChanged += new System.EventHandler(this.SortByObtainedControl_ValueChanged);
             // 
             // wandererNameTextBox
             // 
@@ -1109,12 +1106,13 @@
             this.ScannerDelay_TrackBar.Value = global::InventoryKamera.Properties.Settings.Default.ScannerDelay;
             this.ScannerDelay_TrackBar.ValueChanged += new System.EventHandler(this.ScannerDelay_TrackBar_ValueChanged);
             // 
-            // MainForm
+            // MainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.ClientSize = new System.Drawing.Size(595, 519);
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.ClientSize = new System.Drawing.Size(1132, 764);
             this.Controls.Add(this.NumOfCharToScanControl);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.SortByObtainedControl);
@@ -1175,9 +1173,9 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "MainForm";
+            this.Name = "MainMenu";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Inventory Kamera V#";
+            this.Text = "Inventory Kamera";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
@@ -1255,10 +1253,8 @@
         private System.Windows.Forms.Label Language_Label;
         private System.Windows.Forms.CheckBox CharDevItems_CheckBox;
 		private System.Windows.Forms.MenuStrip menuStrip1;
-		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem keysToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem inventoryToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem Quit_MenuItem;
 		private System.Windows.Forms.ToolStripTextBox inventoryToolStripTextBox;
 		private System.Windows.Forms.ToolStripMenuItem characterScreenToolStripMenuItem;
 		private System.Windows.Forms.ToolStripTextBox characterToolStripTextBox;
@@ -1295,6 +1291,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown NumOfCharToScanControl;
         private System.Windows.Forms.ToolTip ZeroMeansAllTooltips;
+        private System.Windows.Forms.ToolStripMenuItem aToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aToolStripMenuItem1;
     }
 }
 

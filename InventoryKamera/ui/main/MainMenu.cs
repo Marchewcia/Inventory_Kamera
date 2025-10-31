@@ -1,4 +1,5 @@
 ﻿using InventoryKamera.ui;
+using InventoryKamera.ui.main;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 using NHotkey;
@@ -21,7 +22,7 @@ using Application = System.Windows.Forms.Application;
 
 namespace InventoryKamera
 {
-    public partial class MainForm : Form
+    public partial class MainMenu : Form
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static Thread scannerThread;
@@ -32,7 +33,7 @@ namespace InventoryKamera
 
         private bool running = false;
 
-        public MainForm()
+        public MainMenu()
         {
             InitializeComponent();
 
@@ -389,11 +390,6 @@ namespace InventoryKamera
             Delay = ((TrackBar)sender).Value;
         }
 
-        private void Exit_MenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
         private void OptionsMenuItem_KeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true;
@@ -633,19 +629,16 @@ namespace InventoryKamera
             new ExecutablesForm().Show();
         }
 
-        private void label5_Click(object sender, EventArgs e)
+        private void Navigation_Label_Click(object sender, EventArgs e)
         {
-
+            Settings settings = new Settings();
+            settings.Activate();
         }
 
-        private void SortByObtainedControl_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label5_Click_1(object sender, EventArgs e)
-        {
-
+        private void aToolStripMenuItem1_Click(object sender, EventArgs e)
+        { 
+        Settings settings = new Settings();
+        settings.Show();
         }
     }
 }
