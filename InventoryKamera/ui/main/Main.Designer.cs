@@ -61,7 +61,6 @@
             this.travelersName.Name = "travelersName";
             this.travelersName.Size = new System.Drawing.Size(257, 29);
             this.travelersName.TabIndex = 2;
-            this.travelersName.PlaceholderText = 
             // 
             // Main
             // 

@@ -504,7 +504,6 @@
             this.Navigation_Label.Size = new System.Drawing.Size(61, 13);
             this.Navigation_Label.TabIndex = 65;
             this.Navigation_Label.Text = "Navigation:";
-            this.Navigation_Label.Click += new System.EventHandler(this.Navigation_Label_Click);
             // 
             // ScannerOutput_Panel
             // 
@@ -748,7 +747,6 @@
             this.aToolStripMenuItem1.Name = "aToolStripMenuItem1";
             this.aToolStripMenuItem1.Size = new System.Drawing.Size(80, 22);
             this.aToolStripMenuItem1.Text = "a";
-            this.aToolStripMenuItem1.Click += new System.EventHandler(this.aToolStripMenuItem1_Click);
             // 
             // label2
             // 
