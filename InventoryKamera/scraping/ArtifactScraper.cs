@@ -22,157 +22,160 @@ namespace InventoryKamera
             SortByObtained = Properties.Settings.Default.SortByObtained;
         }
 
-        public void ScanArtifacts(int count = 0)
-		{
-			// Get Max artifacts from screen
-			int artifactCount = count == 0 ? ScanItemCount() : count;
-			int page = 1;
+        //TODO: NuGet dependency 
+        //      public void ScanArtifacts(int count = 0)
+        //{
+        //	// Get Max artifacts from screen
+        //	int artifactCount = count == 0 ? ScanItemCount() : count;
+        //	int page = 1;
 
-            SetSort();
-            ClearFilters();
+        //          SetSort();
+        //          ClearFilters();
 
-            var (rectangles, cols, rows) = GetPageOfItems(page);
-			int fullPage = cols * rows;
-			// lowers the artifact count if user is scanning in recently obtained pages
-			artifactCount = (SortByObtained * fullPage <= artifactCount && SortByObtained > 0) ? SortByObtained * fullPage : artifactCount;
-			int totalRows = (int)Math.Ceiling(artifactCount / (decimal)cols);
-			int cardsQueued = 0;
-			int rowsQueued = 0;
-			UserInterface.SetArtifact_Max(artifactCount);
+        //          var (rectangles, cols, rows) = GetPageOfItems(page);
+        //	int fullPage = cols * rows;
+        //	// lowers the artifact count if user is scanning in recently obtained pages
+        //	artifactCount = (SortByObtained * fullPage <= artifactCount && SortByObtained > 0) ? SortByObtained * fullPage : artifactCount;
+        //	int totalRows = (int)Math.Ceiling(artifactCount / (decimal)cols);
+        //	int cardsQueued = 0;
+        //	int rowsQueued = 0;
+        //	UserInterface.SetArtifact_Max(artifactCount);
 
-			StopScanning = false;
+        //	StopScanning = false;
 
-			Logger.Info("Found {0} for artifact count.", artifactCount);
+        //	Logger.Info("Found {0} for artifact count.", artifactCount);
 
 
 
-			//if (SortByLevel)
-			//{
-			//	Logger.Debug("Sorting by level to optimize total scan time");
-			//	// Check if sorted by level
-			//	// If not, sort by level
-			//	if (CurrentSortingMethod() != "level")
-			//	{
-			//		Logger.Debug("Not already sorting by level...");
-			//		Navigation.SetCursor(
-			//			X: (int)(230 / 1280.0 * Navigation.GetWidth()),
-			//			Y: (int)(680 / 720.0 * Navigation.GetHeight()));
-			//		Navigation.Click();
-			//		Navigation.Wait();
-			//		Navigation.SetCursor(
-			//			X: (int)(250 / 1280.0 * Navigation.GetWidth()),
-			//			Y: (int)(615 / 720.0 * Navigation.GetHeight()));
-			//		Navigation.Click();
-			//		Navigation.Wait();
-			//	}
-			//	Logger.Debug("Inventory is sorted by level.");
-			//}
-			//else
-			//{
-			//	Logger.Debug("Sorting by quality to scan all artifacts matching quality filter.");
-			//	// Check if sorted by quality
-			//	if (CurrentSortingMethod() != "quality")
-			//	{
-			//		Logger.Debug("Not already sorting by quality...");
-			//		// If not, sort by quality
-			//		Navigation.SetCursor(
-			//			X: (int)(230 / 1280.0 * Navigation.GetWidth()),
-			//			Y: (int)(680 / 720.0 * Navigation.GetHeight()));
-			//		Navigation.Click();
-			//		Navigation.Wait();
-			//		Navigation.SetCursor(
-			//			X: (int)(250 / 1280.0 * Navigation.GetWidth()),
-			//			Y: (int)(645 / 720.0 * Navigation.GetHeight()));
-			//		Navigation.Click();
-			//		Navigation.Wait();
-			//	}
-			//	Logger.Debug("Inventory is sorted by quality");
-			//}
+        //	//if (SortByLevel)
+        //	//{
+        //	//	Logger.Debug("Sorting by level to optimize total scan time");
+        //	//	// Check if sorted by level
+        //	//	// If not, sort by level
+        //	//	if (CurrentSortingMethod() != "level")
+        //	//	{
+        //	//		Logger.Debug("Not already sorting by level...");
+        //	//		Navigation.SetCursor(
+        //	//			X: (int)(230 / 1280.0 * Navigation.GetWidth()),
+        //	//			Y: (int)(680 / 720.0 * Navigation.GetHeight()));
+        //	//		Navigation.Click();
+        //	//		Navigation.Wait();
+        //	//		Navigation.SetCursor(
+        //	//			X: (int)(250 / 1280.0 * Navigation.GetWidth()),
+        //	//			Y: (int)(615 / 720.0 * Navigation.GetHeight()));
+        //	//		Navigation.Click();
+        //	//		Navigation.Wait();
+        //	//	}
+        //	//	Logger.Debug("Inventory is sorted by level.");
+        //	//}
+        //	//else
+        //	//{
+        //	//	Logger.Debug("Sorting by quality to scan all artifacts matching quality filter.");
+        //	//	// Check if sorted by quality
+        //	//	if (CurrentSortingMethod() != "quality")
+        //	//	{
+        //	//		Logger.Debug("Not already sorting by quality...");
+        //	//		// If not, sort by quality
+        //	//		Navigation.SetCursor(
+        //	//			X: (int)(230 / 1280.0 * Navigation.GetWidth()),
+        //	//			Y: (int)(680 / 720.0 * Navigation.GetHeight()));
+        //	//		Navigation.Click();
+        //	//		Navigation.Wait();
+        //	//		Navigation.SetCursor(
+        //	//			X: (int)(250 / 1280.0 * Navigation.GetWidth()),
+        //	//			Y: (int)(645 / 720.0 * Navigation.GetHeight()));
+        //	//		Navigation.Click();
+        //	//		Navigation.Wait();
+        //	//	}
+        //	//	Logger.Debug("Inventory is sorted by quality");
+        //	//}
 
-			// Go through artifact list
-			while (cardsQueued < artifactCount)
-			{
-				Logger.Debug("Scanning artifact page {0}", page);
-				Logger.Debug("Located {0} possible item locations on page.", rectangles.Count);
+        //	// Go through artifact list
+        //	while (cardsQueued < artifactCount)
+        //	{
+        //		Logger.Debug("Scanning artifact page {0}", page);
+        //		Logger.Debug("Located {0} possible item locations on page.", rectangles.Count);
 
-				int cardsRemaining = artifactCount - cardsQueued;
-				// Go through each "page" of items and queue. In the event that not a full page of
-				// items are scrolled to, offset the index of rectangle to start clicking from
-				for (int i = cardsRemaining < fullPage ? ( rows - ( totalRows - rowsQueued ) ) * cols : 0; i < rectangles.Count; i++)
-				{
-					Rectangle item = rectangles[i];
-					Navigation.SetCursor(item.Center().X, item.Center().Y);
-					Navigation.Click();
-					Navigation.SystemWait(Navigation.Speed.SelectNextInventoryItem);
+        //		int cardsRemaining = artifactCount - cardsQueued;
+        //		// Go through each "page" of items and queue. In the event that not a full page of
+        //		// items are scrolled to, offset the index of rectangle to start clicking from
+        //		for (int i = cardsRemaining < fullPage ? ( rows - ( totalRows - rowsQueued ) ) * cols : 0; i < rectangles.Count; i++)
+        //		{
+        //			Rectangle item = rectangles[i];
+        //			Navigation.SetCursor(item.Center().X, item.Center().Y);
+        //			Navigation.Click();
+        //			Navigation.SystemWait(Navigation.Speed.SelectNextInventoryItem);
 
-					// Queue card for scanning
-					QueueScan(cardsQueued);
-					cardsQueued++;
-					if (cardsQueued >= artifactCount || StopScanning)
-					{
-						if (StopScanning) Logger.Info("Stopping artifact scan based on filtering");
-						else Logger.Info("Stopping artifact scan based on scans queued ({0} of {1})", cardsQueued, artifactCount);
-						return;
-					}
-				}
+        //			// Queue card for scanning
+        //			QueueScan(cardsQueued);
+        //			cardsQueued++;
+        //			if (cardsQueued >= artifactCount || StopScanning)
+        //			{
+        //				if (StopScanning) Logger.Info("Stopping artifact scan based on filtering");
+        //				else Logger.Info("Stopping artifact scan based on scans queued ({0} of {1})", cardsQueued, artifactCount);
+        //				return;
+        //			}
+        //		}
 
-				Logger.Debug("Finished queuing page of artifacts. Scrolling...");
+        //		Logger.Debug("Finished queuing page of artifacts. Scrolling...");
 
-				rowsQueued += rows;
+        //		rowsQueued += rows;
 
-				// Page done, now scroll
-				// If the number of remaining scans is shorter than a full page then
-				// only scroll a few rows
-				if (totalRows - rowsQueued <= rows)
-				{
-					for (int i = 0; i < 10 * ( totalRows - rowsQueued ) - 1; i++)
-					{
-						Navigation.sim.Mouse.VerticalScroll(-1);
-						Navigation.Wait(1);
-					}
-					Navigation.SystemWait(Navigation.Speed.Fast);
-				}
-				else
-				{
-                    
-                    for (int i = 0; i < 10 * rows - 1; i++)
-					{
-						Navigation.sim.Mouse.VerticalScroll(-1);
-						Navigation.Wait(1);
-					}
-					// Scroll back one to keep it from getting too crazy
-					var rollbackPeriod = Navigation.IsNormal ? 9 : 3;
-                    if (page % rollbackPeriod == 0)
-                    {
-						Logger.Debug("Scrolled back one");
-						Navigation.sim.Mouse.VerticalScroll(1);
-						Navigation.Wait(1);
-                    }
-                    Navigation.SystemWait(Navigation.Speed.Fast);
-				}
-				++page;
-				(rectangles, cols, rows) = GetPageOfItems(page, acceptLess: totalRows - rowsQueued <= fullPage);
-			}
-		}
+        //		// Page done, now scroll
+        //		// If the number of remaining scans is shorter than a full page then
+        //		// only scroll a few rows
+        //		if (totalRows - rowsQueued <= rows)
+        //		{
+        //			for (int i = 0; i < 10 * ( totalRows - rowsQueued ) - 1; i++)
+        //			{
+        //				Navigation.sim.Mouse.VerticalScroll(-1);
+        //				Navigation.Wait(1);
+        //			}
+        //			Navigation.SystemWait(Navigation.Speed.Fast);
+        //		}
+        //		else
+        //		{
 
-        private void ClearFilters()
-        {
+        //                  for (int i = 0; i < 10 * rows - 1; i++)
+        //			{
+        //				Navigation.sim.Mouse.VerticalScroll(-1);
+        //				Navigation.Wait(1);
+        //			}
+        //			// Scroll back one to keep it from getting too crazy
+        //			var rollbackPeriod = Navigation.IsNormal ? 9 : 3;
+        //                  if (page % rollbackPeriod == 0)
+        //                  {
+        //				Logger.Debug("Scrolled back one");
+        //				Navigation.sim.Mouse.VerticalScroll(1);
+        //				Navigation.Wait(1);
+        //                  }
+        //                  Navigation.SystemWait(Navigation.Speed.Fast);
+        //		}
+        //		++page;
+        //		(rectangles, cols, rows) = GetPageOfItems(page, acceptLess: totalRows - rowsQueued <= fullPage);
+        //	}
+        //}
 
-            using (var x = Navigation.CaptureRegion(
-                x: (int)((Navigation.IsNormal ? 0.0750 : 0.0757) * Navigation.GetWidth()),
-                y: (int)((Navigation.IsNormal ? 0.8522 : 0.8678) * Navigation.GetHeight()),
-                width: (int)((Navigation.IsNormal ? 0.2244 : 0.2236) * Navigation.GetWidth()),
-                height: (int)((Navigation.IsNormal ? 0.0422 : 0.0367) * Navigation.GetHeight())))
-            {
-                //Navigation.DisplayBitmap(x);
-				var t = GenshinProcesor.AnalyzeText(x).Trim().ToLower();
-				if (t != null && t.Contains("filter"))
-				{
-					Navigation.ClearArtifactFilters();
-				}
-                Navigation.SystemWait(Navigation.Speed.Slow);
-            }
-        }
+
+        //TODO: NuGet dependency 
+    //    private void ClearFilters()
+    //    {
+
+    //        using (var x = Navigation.CaptureRegion(
+    //            x: (int)((Navigation.IsNormal ? 0.0750 : 0.0757) * Navigation.GetWidth()),
+    //            y: (int)((Navigation.IsNormal ? 0.8522 : 0.8678) * Navigation.GetHeight()),
+    //            width: (int)((Navigation.IsNormal ? 0.2244 : 0.2236) * Navigation.GetWidth()),
+    //            height: (int)((Navigation.IsNormal ? 0.0422 : 0.0367) * Navigation.GetHeight())))
+    //        {
+    //            //Navigation.DisplayBitmap(x);
+				//var t = GenshinProcesor.AnalyzeText(x).Trim().ToLower();
+				//if (t != null && t.Contains("filter"))
+				//{
+				//	Navigation.ClearArtifactFilters();
+				//}
+    //            Navigation.SystemWait(Navigation.Speed.Slow);
+    //        }
+    //    }
 
 		private void SetSort()
 		{
@@ -238,15 +241,21 @@ namespace InventoryKamera
                 card
 			};
 
-            bool belowRarity = GetRarity(name) < Properties.Settings.Default.MinimumArtifactRarity;
-            bool belowLevel = ScanArtifactLevel(level) < Properties.Settings.Default.MinimumArtifactLevel;
-            StopScanning = (SortByLevel && belowLevel) || (!SortByLevel && belowRarity);
 
-			if (StopScanning || belowRarity || belowLevel)
-            {
-				artifactImages.ForEach(i => i.Dispose());
-				return;
-            }
+            //TODO: NuGet dependency 
+            //bool belowRarity = GetRarity(name) < Properties.Settings.Default.MinimumArtifactRarity;
+            //bool belowLevel = ScanArtifactLevel(level) < Properties.Settings.Default.MinimumArtifactLevel;
+            //StopScanning = (SortByLevel && belowLevel) || (!SortByLevel && belowRarity);
+
+
+            //TODO: NuGet dependency 
+            //if (StopScanning || belowRarity || belowLevel)
+            //         {
+            //	artifactImages.ForEach(i => i.Dispose());
+            //	return;
+            //         }
+
+
             // Send images to Worker Queue
             InventoryKamera.workerQueue.Enqueue(new OCRImageCollection(artifactImages, "artifact", id));
         }
@@ -304,314 +313,329 @@ namespace InventoryKamera
                 height: (int)(card.Height * (Navigation.IsNormal ? 0.0475 : 0.0809))));
         }
 
-        public static async Task<Artifact> CatalogueFromBitmapsAsync(List<Bitmap> bm, int id)
-		{
-			// Init Variables
-			string gearSlot = null;
-			string mainStat = null;
-			string setName = null;
-			string equippedCharacter = null;
-			List<SubStat> subStats = new List<SubStat>();
-            List<SubStat> unactivatedSubStats = new List<SubStat>();
-            int rarity = 0;
-			int level = 0;
-			bool _lock = false;
+        //TODO: NuGet dependency 
+        //      public static async Task<Artifact> CatalogueFromBitmapsAsync(List<Bitmap> bm, int id)
+        //{
+        //	// Init Variables
+        //	string gearSlot = null;
+        //	string mainStat = null;
+        //	string setName = null;
+        //	string equippedCharacter = null;
+        //	List<SubStat> subStats = new List<SubStat>();
+        //          List<SubStat> unactivatedSubStats = new List<SubStat>();
+        //          int rarity = 0;
+        //	int level = 0;
+        //	bool _lock = false;
 
-			if (bm.Count >= 6)
-			{
-				int a_name = 0; int a_gearSlot = 1; int a_mainStat = 2; int a_level = 3; int a_subStats = 4; int a_equippedCharacter = 5; int a_lock = 6; 
-				// Get Rarity
-				rarity = GetRarity(bm[a_name]);
+        //	if (bm.Count >= 6)
+        //	{
+        //		int a_name = 0; int a_gearSlot = 1; int a_mainStat = 2; int a_level = 3; int a_subStats = 4; int a_equippedCharacter = 5; int a_lock = 6; 
+        //		// Get Rarity
+        //		rarity = GetRarity(bm[a_name]);
 
-				// Check for equipped color
-				Color equippedColor = Color.FromArgb(255, 255, 231, 187);
-				Color equippedStatus = bm[a_equippedCharacter].GetPixel(5, 5);
-				bool b_equipped = GenshinProcesor.CompareColors(equippedColor, equippedStatus);
+        //		// Check for equipped color
+        //		Color equippedColor = Color.FromArgb(255, 255, 231, 187);
+        //		Color equippedStatus = bm[a_equippedCharacter].GetPixel(5, 5);
+        //		bool b_equipped = GenshinProcesor.CompareColors(equippedColor, equippedStatus);
 
-				// Check for lock color
-				Color lockedColor = Color.FromArgb(255, 70, 80, 100); // Dark area around red lock
-				Color lockStatus = bm[a_lock].GetPixel(10, 10);
-				_lock = GenshinProcesor.CompareColors(lockedColor, lockStatus);
+        //		// Check for lock color
+        //		Color lockedColor = Color.FromArgb(255, 70, 80, 100); // Dark area around red lock
+        //		Color lockStatus = bm[a_lock].GetPixel(10, 10);
+        //		_lock = GenshinProcesor.CompareColors(lockedColor, lockStatus);
 
-				// Improved Scanning using multi threading
-				List<Task> tasks = new List<Task>();
+        //		// Improved Scanning using multi threading
+        //		List<Task> tasks = new List<Task>();
 
-				var taskGear  = Task.Run(() => gearSlot = ScanArtifactGearSlot(bm[a_gearSlot]));
-				var taskMain  = taskGear.ContinueWith( (antecedent) => mainStat = ScanArtifactMainStat(bm[a_mainStat], antecedent.Result));
-				var taskLevel = Task.Run(() => level = ScanArtifactLevel(bm[a_level]));
-				var taskSubs  = Task.Run(() => (subStats, unactivatedSubStats) = ScanArtifactSubStats(bm[a_subStats]));
-				var taskEquip = Task.Run(() => equippedCharacter = ScanArtifactEquippedCharacter(bm[a_equippedCharacter]));
-				var taskName = Task.Run(() => setName = ScanArtifactSet(bm[a_name]));
+        //		var taskGear  = Task.Run(() => gearSlot = ScanArtifactGearSlot(bm[a_gearSlot]));
+        //		var taskMain  = taskGear.ContinueWith( (antecedent) => mainStat = ScanArtifactMainStat(bm[a_mainStat], antecedent.Result));
+        //		var taskLevel = Task.Run(() => level = ScanArtifactLevel(bm[a_level]));
+        //		var taskSubs  = Task.Run(() => (subStats, unactivatedSubStats) = ScanArtifactSubStats(bm[a_subStats]));
+        //		var taskEquip = Task.Run(() => equippedCharacter = ScanArtifactEquippedCharacter(bm[a_equippedCharacter]));
+        //		var taskName = Task.Run(() => setName = ScanArtifactSet(bm[a_name]));
 
-				tasks.Add(taskGear);
-				tasks.Add(taskMain);
-				tasks.Add(taskLevel);
-				tasks.Add(taskSubs);
-				tasks.Add(taskName);
-				if (b_equipped)
-				{
-					tasks.Add(taskEquip);
-				}
+        //		tasks.Add(taskGear);
+        //		tasks.Add(taskMain);
+        //		tasks.Add(taskLevel);
+        //		tasks.Add(taskSubs);
+        //		tasks.Add(taskName);
+        //		if (b_equipped)
+        //		{
+        //			tasks.Add(taskEquip);
+        //		}
 
-				await Task.WhenAll(tasks.ToArray());
-			}
-			return new Artifact(setName, rarity, level, gearSlot, mainStat, subStats, unactivatedSubStats, equippedCharacter, id, _lock);
-		}
+        //		await Task.WhenAll(tasks.ToArray());
+        //	}
+        //	return new Artifact(setName, rarity, level, gearSlot, mainStat, subStats, unactivatedSubStats, equippedCharacter, id, _lock);
+        //}
 
-		private static int GetRarity(Bitmap bm)
-		{
-			var averageColor = new ImageStatistics(bm);
 
-			Color fiveStar = Color.FromArgb(255, 188, 105, 50);
-			Color fourStar = Color.FromArgb(255, 161, 86, 224);
-			Color threeStar = Color.FromArgb(255, 81, 127, 203);
-			Color twoStar = Color.FromArgb(255, 42, 143, 114);
-			Color oneStar = Color.FromArgb(255, 114, 119, 138);
+        //TODO: NuGet dependency 
+        //private static int GetRarity(Bitmap bm)
+        //{
+        //	var averageColor = new ImageStatistics(bm);
 
-			var colors = new List<Color> { Color.Black, oneStar, twoStar, threeStar, fourStar, fiveStar };
+        //	Color fiveStar = Color.FromArgb(255, 188, 105, 50);
+        //	Color fourStar = Color.FromArgb(255, 161, 86, 224);
+        //	Color threeStar = Color.FromArgb(255, 81, 127, 203);
+        //	Color twoStar = Color.FromArgb(255, 42, 143, 114);
+        //	Color oneStar = Color.FromArgb(255, 114, 119, 138);
 
-			var c = GenshinProcesor.ClosestColor(colors, averageColor);
+        //	var colors = new List<Color> { Color.Black, oneStar, twoStar, threeStar, fourStar, fiveStar };
 
-			return colors.IndexOf(c);
-		}
+        //	var c = GenshinProcesor.ClosestColor(colors, averageColor);
 
-		public static bool IsEnhancementMaterial(Bitmap card)
-		{
-			RECT reference = Navigation.GetAspectRatio() == new Size(16, 9) ?
-				new RECT(new Rectangle(862, 80, 327, 560)) : (RECT)new Rectangle(862, 80, 328, 640);
-			Bitmap nameBitmap = card.Clone(new RECT(
-				Left: 0,
-				Top: 0,
-				Right: card.Width,
-				Bottom: (int)( 38.0 / reference.Height * card.Height )), card.PixelFormat);
-			string material = ScanEnhancementMaterialName(nameBitmap);
-			return !string.IsNullOrWhiteSpace(material) && GenshinProcesor.enhancementMaterials.Contains(material.ToLower());
-		}
+        //	return colors.IndexOf(c);
+        //}
 
-		private static string ScanEnhancementMaterialName(Bitmap bm)
-		{
-			GenshinProcesor.SetGamma(0.2, 0.2, 0.2, ref bm);
-			Bitmap n = GenshinProcesor.ConvertToGrayscale(bm);
-			GenshinProcesor.SetInvert(ref n);
 
-			// Analyze
-			string name = Regex.Replace(GenshinProcesor.AnalyzeText(n).ToLower(), @"[\W]", string.Empty);
-			name = GenshinProcesor.FindClosestMaterialName(name);
-			n.Dispose();
+        //TODO: NuGet dependency 
+  //      public static bool IsEnhancementMaterial(Bitmap card)
+		//{
+		//	RECT reference = Navigation.GetAspectRatio() == new Size(16, 9) ?
+		//		new RECT(new Rectangle(862, 80, 327, 560)) : (RECT)new Rectangle(862, 80, 328, 640);
+		//	Bitmap nameBitmap = card.Clone(new RECT(
+		//		Left: 0,
+		//		Top: 0,
+		//		Right: card.Width,
+		//		Bottom: (int)( 38.0 / reference.Height * card.Height )), card.PixelFormat);
+		//	string material = ScanEnhancementMaterialName(nameBitmap);
+		//	return !string.IsNullOrWhiteSpace(material) && GenshinProcesor.enhancementMaterials.Contains(material.ToLower());
+		//}
 
-			return name;
-		}
+        //TODO: NuGet dependency
+        //private static string ScanEnhancementMaterialName(Bitmap bm)
+        //{
+        //	GenshinProcesor.SetGamma(0.2, 0.2, 0.2, ref bm);
+        //	Bitmap n = GenshinProcesor.ConvertToGrayscale(bm);
+        //	GenshinProcesor.SetInvert(ref n);
 
-		#region Task Methods
+        //	// Analyze
+        //	string name = Regex.Replace(GenshinProcesor.AnalyzeText(n).ToLower(), @"[\W]", string.Empty);
+        //	name = GenshinProcesor.FindClosestMaterialName(name);
+        //	n.Dispose();
 
-		private static string ScanArtifactGearSlot(Bitmap bm)
-		{
-			// Process Img
-			Bitmap n = GenshinProcesor.ConvertToGrayscale(bm);
-			GenshinProcesor.SetContrast(80.0, ref n);
-			GenshinProcesor.SetInvert(ref n);
+        //	return name;
+        //}
 
-			string gearSlot = GenshinProcesor.AnalyzeText(n).Trim().ToLower();
-			gearSlot = Regex.Replace(gearSlot, @"[\W_]", string.Empty);
-			gearSlot = GenshinProcesor.FindClosestGearSlot(gearSlot);
-			n.Dispose();
-			return gearSlot;
-		}
+        #region Task Methods
 
-		private static string ScanArtifactMainStat(Bitmap bm, string gearSlot)
-		{
-			switch (gearSlot)
-			{
-				// Flower of Life. Flat HP
-				case "flower":
-					return GenshinProcesor.Stats["hp"];
+        //TODO: NuGet dependency 
+        //private static string ScanArtifactGearSlot(Bitmap bm)
+        //{
+        //	// Process Img
+        //	Bitmap n = GenshinProcesor.ConvertToGrayscale(bm);
+        //	GenshinProcesor.SetContrast(80.0, ref n);
+        //	GenshinProcesor.SetInvert(ref n);
 
-				// Plume of Death. Flat ATK
-				case "plume":
-					return GenshinProcesor.Stats["atk"];
+        //	string gearSlot = GenshinProcesor.AnalyzeText(n).Trim().ToLower();
+        //	gearSlot = Regex.Replace(gearSlot, @"[\W_]", string.Empty);
+        //	gearSlot = GenshinProcesor.FindClosestGearSlot(gearSlot);
+        //	n.Dispose();
+        //	return gearSlot;
+        //}
 
-				// Otherwise it's either sands, goblet or circlet.
-				default:
-					Bitmap copy = (Bitmap)bm.Clone();
-					GenshinProcesor.SetContrast(100.0, ref copy);
-					Bitmap n = GenshinProcesor.ConvertToGrayscale(copy);
-					
-					GenshinProcesor.SetThreshold(135, ref n);
-					GenshinProcesor.SetInvert(ref n);
 
-					// Get Main Stat
-					string mainStat = GenshinProcesor.AnalyzeText(n).ToLower().Trim();
-					
+        //TODO: NuGet dependency 
+        //private static string ScanArtifactMainStat(Bitmap bm, string gearSlot)
+        //{
+        //	switch (gearSlot)
+        //	{
+        //		// Flower of Life. Flat HP
+        //		case "flower":
+        //			return GenshinProcesor.Stats["hp"];
 
-					// Remove anything not a-z as well as removes spaces/underscores
-					mainStat = Regex.Replace(mainStat, @"[\W_0-9]", string.Empty);
+        //		// Plume of Death. Flat ATK
+        //		case "plume":
+        //			return GenshinProcesor.Stats["atk"];
 
-					mainStat = GenshinProcesor.FindClosestStat(mainStat, 80);
+        //		// Otherwise it's either sands, goblet or circlet.
+        //		default:
+        //			Bitmap copy = (Bitmap)bm.Clone();
+        //			GenshinProcesor.SetContrast(100.0, ref copy);
+        //			Bitmap n = GenshinProcesor.ConvertToGrayscale(copy);
 
-					if (mainStat == "def" || mainStat == "atk" || mainStat == "hp")
-					{
-						mainStat += "_";
-					}
-					n.Dispose();
-					copy.Dispose();
-					return mainStat;
-			}
-		}
+        //			GenshinProcesor.SetThreshold(135, ref n);
+        //			GenshinProcesor.SetInvert(ref n);
 
-		private static int ScanArtifactLevel(Bitmap bm)
-		{
-			// Process Img
-			Bitmap n = GenshinProcesor.ConvertToGrayscale(bm);
-			GenshinProcesor.SetContrast(80.0, ref n);
-			GenshinProcesor.SetInvert(ref n);
+        //			// Get Main Stat
+        //			string mainStat = GenshinProcesor.AnalyzeText(n).ToLower().Trim();
 
-			// numbersOnly = true => seems to interpret the '+' as a '4'
-			string text = GenshinProcesor.AnalyzeText(n, Tesseract.PageSegMode.SingleWord).Trim().ToLower();
-			n.Dispose();
 
-			// Get rid of all non digits
-			text = Regex.Replace(text, @"[\D]", string.Empty);
+        //			// Remove anything not a-z as well as removes spaces/underscores
+        //			mainStat = Regex.Replace(mainStat, @"[\W_0-9]", string.Empty);
 
-			return int.TryParse(text, out int level) ? level : -1;
-		}
+        //			mainStat = GenshinProcesor.FindClosestStat(mainStat, 80);
 
-		private static (List<SubStat> active, List<SubStat> unactivated) ScanArtifactSubStats(Bitmap artifactImage)
-        {
-            Bitmap bm = (Bitmap)artifactImage.Clone();
-			List<string> lines = new List<string>();
-			List<SubStat> substats = new List<SubStat>();
-			List<SubStat> unactivated = new List<SubStat>();
-			string text;
-            GenshinProcesor.SetBrightness(-30, ref bm);
-            GenshinProcesor.SetContrast(85, ref bm);
-			bool hasUnactivated = false;
-			using (var n = GenshinProcesor.ConvertToGrayscale(bm))
-			{
-				text = GenshinProcesor.AnalyzeText(n, Tesseract.PageSegMode.Auto).ToLower();
-			}
+        //			if (mainStat == "def" || mainStat == "atk" || mainStat == "hp")
+        //			{
+        //				mainStat += "_";
+        //			}
+        //			n.Dispose();
+        //			copy.Dispose();
+        //			return mainStat;
+        //	}
+        //}
 
-			if(text.Contains("(unactivated)"))
-			{
-				hasUnactivated = true;
-			}
 
-            lines = new List<string>(text.Split('\n'));
-            lines.RemoveAll(line => string.IsNullOrWhiteSpace(line));
+        //TODO: NuGet dependency 
+        //      private static int ScanArtifactLevel(Bitmap bm)
+        //{
+        //	// Process Img
+        //	Bitmap n = GenshinProcesor.ConvertToGrayscale(bm);
+        //	GenshinProcesor.SetContrast(80.0, ref n);
+        //	GenshinProcesor.SetInvert(ref n);
 
-            var index = lines.FindIndex(line =>
-				Regex.IsMatch(line, @"(piece|set|2-)") ||
-				Regex.IsMatch(line.Trim(), @"^[A-Za-z\s]+:$")
-			);
-            if (index >= 0)
-			{
-				lines.RemoveRange(index, lines.Count - index);
-			}
+        //	// numbersOnly = true => seems to interpret the '+' as a '4'
+        //	string text = GenshinProcesor.AnalyzeText(n, Tesseract.PageSegMode.SingleWord).Trim().ToLower();
+        //	n.Dispose();
 
-            bm.Dispose();
-			for (int i = 0; i < lines.Count; i++)
-			{
-				var line = Regex.Replace(lines[i], @"(?:^[^a-zA-Z]*)", string.Empty).Replace(" ", string.Empty);
+        //	// Get rid of all non digits
+        //	text = Regex.Replace(text, @"[\D]", string.Empty);
 
-				if (line.Any(char.IsDigit))
-				{
-					Logger.Debug("Parsing artifact substat: {0}", line);
+        //	return int.TryParse(text, out int level) ? level : -1;
+        //}
 
-					SubStat substat = new SubStat();
-					Regex re = new Regex(@"^(.*?)(\d+.*)");
-					var result = re.Match(line);
-					var stat = Regex.Replace(result.Groups[1].Value, @"[^\w]", string.Empty);
-					var value = result.Groups[2].Value;
+        //TODO: NuGet dependency 
+        //     private static (List<SubStat> active, List<SubStat> unactivated) ScanArtifactSubStats(Bitmap artifactImage)
+        //     {
+        //         Bitmap bm = (Bitmap)artifactImage.Clone();
+        //List<string> lines = new List<string>();
+        //List<SubStat> substats = new List<SubStat>();
+        //List<SubStat> unactivated = new List<SubStat>();
+        //string text;
+        //         GenshinProcesor.SetBrightness(-30, ref bm);
+        //         GenshinProcesor.SetContrast(85, ref bm);
+        //bool hasUnactivated = false;
+        //using (var n = GenshinProcesor.ConvertToGrayscale(bm))
+        //{
+        //	text = GenshinProcesor.AnalyzeText(n, Tesseract.PageSegMode.Auto).ToLower();
+        //}
 
-					string name = line.Contains("%") ? stat + "%" : stat;
+        //if(text.Contains("(unactivated)"))
+        //{
+        //	hasUnactivated = true;
+        //}
 
-					substat.stat = GenshinProcesor.FindClosestStat(name, 80) ?? "";
+        //         lines = new List<string>(text.Split('\n'));
+        //         lines.RemoveAll(line => string.IsNullOrWhiteSpace(line));
 
-					// Remove any non digits.
-					value = Regex.Replace(value, @"[^0-9]", string.Empty);
+        //         var index = lines.FindIndex(line =>
+        //	Regex.IsMatch(line, @"(piece|set|2-)") ||
+        //	Regex.IsMatch(line.Trim(), @"^[A-Za-z\s]+:$")
+        //);
+        //         if (index >= 0)
+        //{
+        //	lines.RemoveRange(index, lines.Count - index);
+        //}
 
-					// Try to parse number
-					if (!decimal.TryParse(value, out substat.value))
-					{
-						Logger.Debug("Failed to parse stat value from: {0}", line);
-						substat.value = -1;
-					}
+        //         bm.Dispose();
+        //for (int i = 0; i < lines.Count; i++)
+        //{
+        //	var line = Regex.Replace(lines[i], @"(?:^[^a-zA-Z]*)", string.Empty).Replace(" ", string.Empty);
 
-					if (substat.value != -1 && substat.stat.Contains("_"))
-					{
-						substat.value /= 10;
-					}
+        //	if (line.Any(char.IsDigit))
+        //	{
+        //		Logger.Debug("Parsing artifact substat: {0}", line);
 
-					if (string.IsNullOrWhiteSpace(substat.stat) || substat.value == -1)
-					{
-						Logger.Debug("Failed to parse stat from: {0}", line);
-					}
+        //		SubStat substat = new SubStat();
+        //		Regex re = new Regex(@"^(.*?)(\d+.*)");
+        //		var result = re.Match(line);
+        //		var stat = Regex.Replace(result.Groups[1].Value, @"[^\w]", string.Empty);
+        //		var value = result.Groups[2].Value;
 
-					substats.Insert(i, substat);
-				}
-			}
+        //		string name = line.Contains("%") ? stat + "%" : stat;
 
-			if(substats.Count == 0 )
-			{
-				Logger.Debug("Failed to obtain substats");
-			}
+        //		substat.stat = GenshinProcesor.FindClosestStat(name, 80) ?? "";
 
-			//if theres an unactivated substat, moves the last one (should be the only unactivated) to the unactivated list
-			if (hasUnactivated && substats.Count > 0)
-			{
-				SubStat lastSubstat = substats[substats.Count - 1];
-				unactivated.Insert(0, lastSubstat);
-				substats.Remove(lastSubstat);
-			}
+        //		// Remove any non digits.
+        //		value = Regex.Replace(value, @"[^0-9]", string.Empty);
 
-            return (substats, unactivated);
-        }
+        //		// Try to parse number
+        //		if (!decimal.TryParse(value, out substat.value))
+        //		{
+        //			Logger.Debug("Failed to parse stat value from: {0}", line);
+        //			substat.value = -1;
+        //		}
 
-        private static string ScanArtifactEquippedCharacter(Bitmap bm)
-		{
-			Bitmap n = GenshinProcesor.ConvertToGrayscale(bm);
-			GenshinProcesor.SetContrast(60.0, ref n);
+        //		if (substat.value != -1 && substat.stat.Contains("_"))
+        //		{
+        //			substat.value /= 10;
+        //		}
 
-			string equippedCharacter = GenshinProcesor.AnalyzeText(n).ToLower();
-			n.Dispose();
+        //		if (string.IsNullOrWhiteSpace(substat.stat) || substat.value == -1)
+        //		{
+        //			Logger.Debug("Failed to parse stat from: {0}", line);
+        //		}
 
-			if (equippedCharacter != "")
-			{
-				if (equippedCharacter.Contains("equipped") && equippedCharacter.Contains(":"))
-				{
-					equippedCharacter = Regex.Replace(equippedCharacter.Split(':')[1], @"[\W]", string.Empty);
-					equippedCharacter = GenshinProcesor.FindClosestCharacterName(equippedCharacter);
+        //		substats.Insert(i, substat);
+        //	}
+        //}
 
-					return equippedCharacter;
-				}
-			}
-			// artifact has no equipped character
-			return null;
-		}
+        //if(substats.Count == 0 )
+        //{
+        //	Logger.Debug("Failed to obtain substats");
+        //}
 
-		private static string ScanArtifactSet(Bitmap itemName)
-        {
-            GenshinProcesor.SetGamma(0.2, 0.2, 0.2, ref itemName);
-            Bitmap grayscale = GenshinProcesor.ConvertToGrayscale(itemName);
-            GenshinProcesor.SetInvert(ref grayscale);
+        ////if theres an unactivated substat, moves the last one (should be the only unactivated) to the unactivated list
+        //if (hasUnactivated && substats.Count > 0)
+        //{
+        //	SubStat lastSubstat = substats[substats.Count - 1];
+        //	unactivated.Insert(0, lastSubstat);
+        //	substats.Remove(lastSubstat);
+        //}
 
-            // Analyze
-            using (Bitmap padded = new Bitmap((int)(grayscale.Width + grayscale.Width * .1), grayscale.Height + (int)(grayscale.Height * .5)))
-            {
-                using (Graphics g = Graphics.FromImage(padded))
-                {
-                    g.Clear(Color.White);
-                    g.DrawImage(grayscale, (padded.Width - grayscale.Width) / 2, (padded.Height - grayscale.Height) / 2);
+        //         return (substats, unactivated);
+        //     }
 
-                    var scannedText = GenshinProcesor.AnalyzeText(grayscale, Tesseract.PageSegMode.Auto).ToLower().Replace("\n", " ");
-                    string text = Regex.Replace(scannedText, @"[\W]", string.Empty);
-                    text = GenshinProcesor.FindClosestArtifactSetFromArtifactName(text);
 
-					grayscale.Dispose();
+        //TODO: NuGet dependency 
+  //      private static string ScanArtifactEquippedCharacter(Bitmap bm)
+		//{
+		//	Bitmap n = GenshinProcesor.ConvertToGrayscale(bm);
+		//	GenshinProcesor.SetContrast(60.0, ref n);
 
-					return text;
-                }
-            }
-        }
+		//	string equippedCharacter = GenshinProcesor.AnalyzeText(n).ToLower();
+		//	n.Dispose();
+
+		//	if (equippedCharacter != "")
+		//	{
+		//		if (equippedCharacter.Contains("equipped") && equippedCharacter.Contains(":"))
+		//		{
+		//			equippedCharacter = Regex.Replace(equippedCharacter.Split(':')[1], @"[\W]", string.Empty);
+		//			equippedCharacter = GenshinProcesor.FindClosestCharacterName(equippedCharacter);
+
+		//			return equippedCharacter;
+		//		}
+		//	}
+		//	// artifact has no equipped character
+		//	return null;
+		//}
+
+        //TODO: NuGet dependency 
+     //   private static string ScanArtifactSet(Bitmap itemName)
+     //   {
+     //       GenshinProcesor.SetGamma(0.2, 0.2, 0.2, ref itemName);
+     //       Bitmap grayscale = GenshinProcesor.ConvertToGrayscale(itemName);
+     //       GenshinProcesor.SetInvert(ref grayscale);
+
+     //       // Analyze
+     //       using (Bitmap padded = new Bitmap((int)(grayscale.Width + grayscale.Width * .1), grayscale.Height + (int)(grayscale.Height * .5)))
+     //       {
+     //           using (Graphics g = Graphics.FromImage(padded))
+     //           {
+     //               g.Clear(Color.White);
+     //               g.DrawImage(grayscale, (padded.Width - grayscale.Width) / 2, (padded.Height - grayscale.Height) / 2);
+
+     //               var scannedText = GenshinProcesor.AnalyzeText(grayscale, Tesseract.PageSegMode.Auto).ToLower().Replace("\n", " ");
+     //               string text = Regex.Replace(scannedText, @"[\W]", string.Empty);
+     //               text = GenshinProcesor.FindClosestArtifactSetFromArtifactName(text);
+
+					//grayscale.Dispose();
+
+					//return text;
+     //           }
+     //       }
+     //   }
 
         #endregion Task Methods
     }

@@ -269,7 +269,8 @@ namespace InventoryKamera
 
 
                         // The Data object of json object
-                        data.GatherData();
+                        //TODO: NuGet dependency 
+                        //data.GatherData();
 
                         // Covert to GOOD
                         GOOD good = new GOOD(data);
