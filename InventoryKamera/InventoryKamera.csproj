@@ -58,6 +58,9 @@
     <OutputPath>bin\x64\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="ui\bg.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Accord.Imaging" Version="3.8.0" />
     <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />
     <PackageReference Include="InputSimulator" Version="1.0.4" />
@@ -92,7 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Item_Special_Kamera.ico" />
-    <Content Include="ui\main\bg.png" />
+    <Content Include="ui\resources\bg.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -105,5 +108,8 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ui\bg.png" />
   </ItemGroup>
 </Project>

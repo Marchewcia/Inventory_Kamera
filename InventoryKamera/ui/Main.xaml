@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InventoryKamera.ui"
         mc:Ignorable="d"
-        Title="NeoKamera" Height="500" Width="700">
+        Title="Inventory Kamera" Height="500" Width="700">
+    <Window.Background>
+        <ImageBrush ImageSource="/ui/bg.png"/>
+    </Window.Background>
     <Grid>
         
     </Grid>
