@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace InventoryKamera.ui.main
+namespace InventoryKamera.ui
 {
     /// <summary>
-    /// Interaction logic for test.xaml
+    /// Interaction logic for Main.xaml
     /// </summary>
-    public partial class test : System.Windows.Controls.UserControl
+    public partial class Main : Window
     {
-        public test()
+        public Main()
         {
             InitializeComponent();
         }
