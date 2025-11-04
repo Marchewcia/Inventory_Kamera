@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using InventoryKamera.ui.main;
+using NLog;
 using System;
 using System.Windows.Forms;
 
@@ -21,7 +22,7 @@ namespace InventoryKamera
 
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
-				Application.Run(new MainMenu());
+				Application.Run(new MainMenu()); //NOTE: where menu starts
 				//Application.Run(new MainUI());
             }
             catch (Exception ex)
