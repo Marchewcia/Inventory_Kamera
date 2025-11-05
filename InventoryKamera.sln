@@ -1,9 +1,13 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InventoryKamera", "InventoryKamera\InventoryKamera.csproj", "{7B7F907E-11F4-4000-B711-8E532A36F8A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryKamera", "LegacyKamera\InventoryKamera\InventoryKamera.csproj", "{7B7F907E-11F4-4000-B711-8E532A36F8A9}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Inventory Kamera Installer", "LegacyKamera\Inventory Kamera Installer\Inventory Kamera Installer.vdproj", "{A0A931B9-288D-48F5-9E1D-E0307BD5F3CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryKameraWPF", "LegacyKamera\InventoryKameraWPF\InventoryKameraWPF.csproj", "{01D9CF37-EF4D-4396-B955-28C1879359D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +52,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B7F907E-11F4-4000-B711-8E532A36F8A9} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{A0A931B9-288D-48F5-9E1D-E0307BD5F3CD} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{01D9CF37-EF4D-4396-B955-28C1879359D7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {608601B7-57A7-43A7-A32B-FA2E8DF17DDC}

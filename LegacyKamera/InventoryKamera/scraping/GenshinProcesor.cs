@@ -133,20 +133,19 @@ namespace InventoryKamera
 			else throw new KeyNotFoundException($"Could not find '{target}' entry in characters.json");
 		}
 
-        //TODO: NuGet dependency 
-  //      internal static void AssignTravelerName(string name)
-		//{
-		//	name = string.IsNullOrWhiteSpace(name) ? CharacterScraper.ScanMainCharacterName() : name.ToLower();
-		//	if (!string.IsNullOrWhiteSpace(name))
-		//	{
-		//		UpdateCharacterName("traveler", name);
-		//		UserInterface.SetMainCharacterName(name);
-		//	}
-		//	else
-		//	{
-		//		UserInterface.AddError("Could not parse Traveler's username");
-		//	}
-		//}
+		internal static void AssignTravelerName(string name)
+		{
+			name = string.IsNullOrWhiteSpace(name) ? CharacterScraper.ScanMainCharacterName() : name.ToLower();
+			if (!string.IsNullOrWhiteSpace(name))
+			{
+				UpdateCharacterName("traveler", name);
+				UserInterface.SetMainCharacterName(name);
+			}
+			else
+			{
+				UserInterface.AddError("Could not parse Traveler's username");
+			}
+		}
 
 		#region OCR
 
@@ -187,34 +186,30 @@ namespace InventoryKamera
 			Logger.Debug("{numEngines} Engines restarted", numEngines);
 		}
 
-        /// <summary> Use Tesseract OCR to find words on picture to string </summary>
-        /// 
+		/// <summary> Use Tesseract OCR to find words on picture to string </summary>
+		internal static string AnalyzeText(Bitmap bitmap, PageSegMode pageMode = PageSegMode.SingleLine, bool numbersOnly = false)
+		{
+			string text = "";
+			TesseractEngine e;
+			while (!engines.TryTake(out e)) { Thread.Sleep(10); }
 
+			if (numbersOnly) e.SetVariable("tessedit_char_whitelist", "0123456789");
+			using (var page = e.Process(bitmap, pageMode))
+			{
+				using (var iter = page.GetIterator())
+				{
+					iter.Begin();
+					do
+					{
+						text += iter.GetText(PageIteratorLevel.TextLine);
+					}
+					while (iter.Next(PageIteratorLevel.TextLine));
+				}
+			}
+			engines.Add(e);
 
-        //TODO: NuGet dependency 
-  //      internal static string AnalyzeText(Bitmap bitmap, PageSegMode pageMode = PageSegMode.SingleLine, bool numbersOnly = false)
-		//{
-		//	string text = "";
-		//	TesseractEngine e;
-		//	while (!engines.TryTake(out e)) { Thread.Sleep(10); }
-
-		//	if (numbersOnly) e.SetVariable("tessedit_char_whitelist", "0123456789");
-		//	using (var page = e.Process(bitmap, pageMode))
-		//	{
-		//		using (var iter = page.GetIterator())
-		//		{
-		//			iter.Begin();
-		//			do
-		//			{
-		//				text += iter.GetText(PageIteratorLevel.TextLine);
-		//			}
-		//			while (iter.Next(PageIteratorLevel.TextLine));
-		//		}
-		//	}
-		//	engines.Add(e);
-
-		//	return text;
-		//}
+			return text;
+		}
 
 		#endregion OCR
 
@@ -707,39 +702,36 @@ namespace InventoryKamera
 			return diff[0] < 10 && diff[1] < 10 && diff[2] < 10;
 		}
 
+		internal static Color ClosestColor(List<Color> colors, ImageStatistics color)
+		{
+			var c2 = Color.FromArgb((int)color.Red.Mean, (int)color.Green.Mean, (int)color.Blue.Mean);
+			var diff = colors.Select(x => new { Value = x, Diff = GetColorDifference(x, c2) }).ToList();
 
-        //TODO: NuGet dependency 
-  //      internal static Color ClosestColor(List<Color> colors, ImageStatistics color)
-		//{
-		//	var c2 = Color.FromArgb((int)color.Red.Mean, (int)color.Green.Mean, (int)color.Blue.Mean);
-		//	var diff = colors.Select(x => new { Value = x, Diff = GetColorDifference(x, c2) }).ToList();
+			foreach (var c in colors)
+            {
+                if (CompareColors(c, c2)) return c;
+            }
 
-		//	foreach (var c in colors)
-  //          {
-  //              if (CompareColors(c, c2)) return c;
-  //          }
-
-  //          return diff.Find(x=> x.Diff == diff.Min(y=>y.Diff)).Value;
-		//}
+            return diff.Find(x=> x.Diff == diff.Min(y=>y.Diff)).Value;
+		}
 
         private static int GetColorDifference(Color c, Color c2)
         {
 			int r = c.R - c2.R, g = c.G - c2.G, b = c.B - c2.B;
 			return r*r + g*g + b*b;
 		}
-        //TODO: NuGet dependency 
-        //      internal static Bitmap ConvertToGrayscale(Bitmap bitmap)
-        //{
-        //	return new Grayscale(0.2125, 0.7154, 0.0721).Apply(bitmap);
-        //}
 
-        //TODO: NuGet dependency 
-        //internal static void SetContrast(double contrast, ref Bitmap bitmap)
-        //{
-        //	new ContrastCorrection((int)contrast).ApplyInPlace(bitmap);
-        //}
+        internal static Bitmap ConvertToGrayscale(Bitmap bitmap)
+		{
+			return new Grayscale(0.2125, 0.7154, 0.0721).Apply(bitmap);
+		}
 
-        internal static void SetGamma(double red, double green, double blue, ref Bitmap bitmap)
+		internal static void SetContrast(double contrast, ref Bitmap bitmap)
+		{
+			new ContrastCorrection((int)contrast).ApplyInPlace(bitmap);
+		}
+
+		internal static void SetGamma(double red, double green, double blue, ref Bitmap bitmap)
 		{
 			Bitmap temp = bitmap;
 			Bitmap bmap = (Bitmap)temp.Clone();
@@ -770,13 +762,12 @@ namespace InventoryKamera
 			return gammaArray;
 		}
 
-        //TODO: NuGet dependency 
-        //internal static void SetInvert(ref Bitmap bitmap)
-        //{
-        //	new Invert().ApplyInPlace(bitmap);
-        //}
+		internal static void SetInvert(ref Bitmap bitmap)
+		{
+			new Invert().ApplyInPlace(bitmap);
+		}
 
-        internal static void SetColor(string colorFilterType, ref Bitmap bitmap)
+		internal static void SetColor(string colorFilterType, ref Bitmap bitmap)
 		{
 			Bitmap temp = bitmap;
 			Bitmap bmap = (Bitmap)temp.Clone();
@@ -854,27 +845,25 @@ namespace InventoryKamera
 			}
 			bitmap = (Bitmap)bmap.Clone();
 		}
-        //TODO: NuGet dependency 
-        //internal static void SetThreshold(int threshold, ref Bitmap bitmap)
-        //{
-        //	new Threshold(threshold).ApplyInPlace(bitmap);
-        //}
 
+		internal static void SetThreshold(int threshold, ref Bitmap bitmap)
+		{
+			new Threshold(threshold).ApplyInPlace(bitmap);
+		}
 
-        //TODO: NuGet dependency 
-        //internal static void FilterColors(ref Bitmap bm, IntRange red, IntRange green, IntRange blue)
-        //{
-        //	ColorFiltering colorFilter = new ColorFiltering
-        //	{
-        //		Red = red,
-        //		Green = green,
-        //		Blue = blue,
-        //		FillColor = new RGB(255,255,255)
-        //	};
-        //	colorFilter.ApplyInPlace(bm);
-        //}
+		internal static void FilterColors(ref Bitmap bm, IntRange red, IntRange green, IntRange blue)
+		{
+			ColorFiltering colorFilter = new ColorFiltering
+			{
+				Red = red,
+				Green = green,
+				Blue = blue,
+				FillColor = new RGB(255,255,255)
+			};
+			colorFilter.ApplyInPlace(bm);
+		}
 
-        internal static bool CompareBitmapsFast(Bitmap bmp1, Bitmap bmp2)
+		internal static bool CompareBitmapsFast(Bitmap bmp1, Bitmap bmp2)
 		{
 			if (bmp1 == null || bmp2 == null)
 				return false;
@@ -910,15 +899,14 @@ namespace InventoryKamera
 			return result;
 		}
 
-        //TODO: NuGet dependency 
-  //      internal static Bitmap PreProcessImage(Bitmap image)
-		//{
-		//	using (var edges = new KirschEdgeDetector().Apply(image)) // Algorithm to find edges. Really good but can take ~1s
-		//	using (var grayscale = ConvertToGrayscale(edges))
-		//	{
-		//		return new Threshold(70).Apply(grayscale);
-		//	}
-		//}
+		internal static Bitmap PreProcessImage(Bitmap image)
+		{
+			using (var edges = new KirschEdgeDetector().Apply(image)) // Algorithm to find edges. Really good but can take ~1s
+			using (var grayscale = ConvertToGrayscale(edges))
+			{
+				return new Threshold(70).Apply(grayscale);
+			}
+		}
 
 		internal static Bitmap CopyBitmap(Bitmap source, Rectangle region)
 		{

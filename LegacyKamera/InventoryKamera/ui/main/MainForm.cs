@@ -1,5 +1,4 @@
 ﻿using InventoryKamera.ui;
-using InventoryKamera.ui.main;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 using NHotkey;
@@ -22,7 +21,7 @@ using Application = System.Windows.Forms.Application;
 
 namespace InventoryKamera
 {
-    public partial class MainMenu : Form
+    public partial class MainForm : Form
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static Thread scannerThread;
@@ -33,7 +32,7 @@ namespace InventoryKamera
 
         private bool running = false;
 
-        public MainMenu()
+        public MainForm()
         {
             InitializeComponent();
 
@@ -103,7 +102,7 @@ namespace InventoryKamera
             Navigation.Reset();
 
             // Need to invoke method from the UI's handle, not the worker thread
-            BeginInvoke((System.Windows.Forms.MethodInvoker)delegate { RemoveHotkey(); });
+            BeginInvoke((MethodInvoker)delegate { RemoveHotkey(); });
             Logger.Info("Hotkey removed");
         }
 
@@ -269,8 +268,7 @@ namespace InventoryKamera
 
 
                         // The Data object of json object
-                        //TODO: NuGet dependency 
-                        //data.GatherData();
+                        data.GatherData();
 
                         // Covert to GOOD
                         GOOD good = new GOOD(data);
@@ -305,7 +303,7 @@ namespace InventoryKamera
                     {
                         ResetUI();
                         running = false;
-                        ManualExportButton.Invoke((System.Windows.Forms.MethodInvoker)delegate
+                        ManualExportButton.Invoke((MethodInvoker)delegate
                         {
                             ManualExportButton.Enabled = data.HasData;
                         });
@@ -389,6 +387,11 @@ namespace InventoryKamera
         private void ScannerDelay_TrackBar_ValueChanged(object sender, EventArgs e)
         {
             Delay = ((TrackBar)sender).Value;
+        }
+
+        private void Exit_MenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         private void OptionsMenuItem_KeyDown(object sender, KeyEventArgs e)
@@ -617,7 +620,7 @@ namespace InventoryKamera
 
         private void MainForm_Activate()
         {
-            BeginInvoke((System.Windows.Forms.MethodInvoker)delegate { Activate(); });
+            BeginInvoke((MethodInvoker)delegate { Activate(); });
         }
 
         private void ErrorLog_Label_Click(object sender, EventArgs e)
@@ -628,6 +631,21 @@ namespace InventoryKamera
         private void updateExecutablesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new ExecutablesForm().Show();
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SortByObtainedControl_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }
