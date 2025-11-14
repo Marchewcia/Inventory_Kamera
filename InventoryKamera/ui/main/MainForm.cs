@@ -302,10 +302,36 @@ namespace InventoryKamera
                         // Add navigation delay
                         Navigation.SetDelay(ScannerDelayValue(Delay));
 
+                        //check if all names are unique
+                        string m1 = Properties.Settings.Default.Manequin1Name;
+                        string m2 = Properties.Settings.Default.Manequin2Name;
+                        string t = Properties.Settings.Default.TravelerName;
+                        string w = Properties.Settings.Default.WandererName;
+
+                        if (m1 == m2 || m1 == t || m1 == w || m2 == t || m2 == w || w == t)
+                        {
+                            throw new Exception("Characters have the same name");
+                        }
+                        #region bad fix prob shouldnt even keep it
+                        //try
+                        //{
+                        //    if (m1 == m2 || m1 == t || m1 == w || m2 == t || m2 == w || w == t)
+                        //    {
+                        //        throw new Exception();
+                        //    }
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    Logger.Info("Characters have the same name");
+                        //    UserInterface.AddError("Characters have the same name");
+                        //    ResetUI();
+                        //    running = false;
+                        //    MainForm_Activate();
+                        //}
+                        #endregion
 
                         // The Data object of json object
                         data.GatherData();
-
                         // Covert to GOOD
                         GOOD good = new GOOD(data);
                         Logger.Info("Data converted to GOOD");
@@ -316,6 +342,7 @@ namespace InventoryKamera
 
                         UserInterface.SetProgramStatus("Finished");
                         OpenOptimizerDialog(good);
+
                     }
                     catch (ThreadAbortException)
                     {

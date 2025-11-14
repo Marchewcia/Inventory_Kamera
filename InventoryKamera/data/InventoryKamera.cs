@@ -114,8 +114,8 @@ namespace InventoryKamera
 			GenshinProcesor.RestartEngines();
 
 
-			// Assign Traveler's custom name
-			GenshinProcesor.AssignTravelerName(Properties.Settings.Default.TravelerName);
+            // Assign Traveler's custom name
+            GenshinProcesor.AssignTravelerName(Properties.Settings.Default.TravelerName);
 
             // Assign Wanderer's custom name
             GenshinProcesor.UpdateCharacterName("wanderer", Properties.Settings.Default.WandererName);
