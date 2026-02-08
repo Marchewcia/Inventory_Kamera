@@ -81,6 +81,25 @@ Before starting the scanner, you can (optionally) edit the following options:
 3. Press the `Open Export Folder` button to open a File Explorer window. This is where Inventory Kamera exports its scanned data.
 
 
+# Inventory Kamera Troubleshooting (Read first)
+
+1. Use the latest version(1.4.2) from [this repository](https://github.com/taiwenlee/Inventory_Kamera/releases/latest)
+2. Game language is English (accents / special characters can break scanning)
+3. Use a 16:9 resolution on your main monitor (1920×1080, 1280×720, etc.) (16:10 should work but is untested)
+4. Disable all overlays/filters (NVIDIA filters, FPS counters, Discord overlay, PC stats, etc.)
+5. Traveler, Wanderer, and both manequins must all have unique names, and not share names with other characters, special characters are not supported by the scanner
+6. disable HDR
+7. Some names may be too long for character scanning (ie. bennett con notification might partial block Kazuhas name) making sure the long names show up before bennett(or any unactivated cons) may fix this
+8. Sometimes artifacts will be skipped from unknown reasons, trying higher res/ gaining/lossing some artifacts may help
+9. Check #bug reporting (channel on our [discord](https://discord.gg/zh56aVWe3U) ) to see if the issue already has a solution
+# Still Not Working?
+If the issue isn’t already in #bug reposting (channel on our [discord](https://discord.gg/zh56aVWe3U) ), create a new post and include:
+* A brief description of the problem
+* A video or screenshots
+* The log folder  (``[kamera folder]/logging/``)
+Make sure "Log All Screenshots" is enabled and rerun the program before posting.
+reports without all of above will be disregarded.
+Please avoid using other channels for help relating to issues with Inventory Kamera.
 
 
 ## Updating for new game versions
