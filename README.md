@@ -81,7 +81,7 @@ Before starting the scanner, you can (optionally) edit the following options:
 
 3. Press the `Open Export Folder` button to open a File Explorer window. This is where Inventory Kamera exports its scanned data.
 
-#Inventory Kamera Troubleshooting
+## Inventory Kamera Troubleshooting
 
 1. Use the latest version(1.4.2) from [this repository](https://github.com/taiwenlee/Inventory_Kamera/releases/latest)
 2. Game language is English (accents / special characters can break scanning)
