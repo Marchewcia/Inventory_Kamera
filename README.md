@@ -21,6 +21,7 @@ https://discord.gg/zh56aVWe3U
   - [Setting up Genshin Impact](#setting-up-genshin-impact)
   - [Settings and configurations](#how-to-configure-inventory-kamera)
   - [Running Inventory Kamera](#how-to-run-inventory-kamera)
+  - [Troubleshooting](#Inventory-Kamera-Troubleshooting)
 - Scanner
   - [Updating the database](#updating-for-new-game-versions)
 - Repository
@@ -80,8 +81,7 @@ Before starting the scanner, you can (optionally) edit the following options:
 
 3. Press the `Open Export Folder` button to open a File Explorer window. This is where Inventory Kamera exports its scanned data.
 
-
-# Inventory Kamera Troubleshooting (Read first)
+#Inventory Kamera Troubleshooting
 
 1. Use the latest version(1.4.2) from [this repository](https://github.com/taiwenlee/Inventory_Kamera/releases/latest)
 2. Game language is English (accents / special characters can break scanning)
@@ -100,7 +100,6 @@ If the issue isn’t already in #bug reposting (channel on our [discord](https:/
 Make sure "Log All Screenshots" is enabled and rerun the program before posting.
 reports without all of above will be disregarded.
 Please avoid using other channels for help relating to issues with Inventory Kamera.
-
 
 ## Updating for new game versions
 
